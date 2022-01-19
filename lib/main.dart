@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:crypto_vault/home_screen.dart';
-import 'package:crypto_vault/intro_screen.dart';
+import 'package:crypto_vault/screens/home_screen.dart';
+import 'package:crypto_vault/screens/intro_screen.dart';
 
 bool show = true;
 void main() async {
