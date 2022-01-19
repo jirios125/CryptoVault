@@ -1,9 +1,9 @@
-import 'package:dio/dio.dart';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_vault/util/responsive.dart';
 import 'package:intl/intl.dart';
-
+import 'package:http/http.dart' as http;
 
 class CryptoScreen extends StatefulWidget {
   const CryptoScreen({Key? key}) : super(key: key);
@@ -13,14 +13,16 @@ class CryptoScreen extends StatefulWidget {
 }
 
 class _CryptoScreenState extends State<CryptoScreen> {
-  late Response response;
-  var dio = Dio();
-  String reqUrl = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,binancecoin,cardano,solana';
   int cashAviable = 12500;
   final oCcy = new NumberFormat("#,##0.00", "en_US");
-  
+  String reqUrl = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,binancecoin,cardano,solana';
+  late String prices;
+  List priceCryptos = [];
+
+
   @override
   Widget build(BuildContext context) {
+    getPrices();
     var responsive = Responsive(context);
     return Column(
       children: [
@@ -43,7 +45,9 @@ class _CryptoScreenState extends State<CryptoScreen> {
                     SizedBox(
                         width: responsive.wp(96),
                         height: responsive.ip(25),
-                        child: Image.network('https://lh3.googleusercontent.com/ZdMdznf08GDWOLY3pKfjQudbAxxQkFQ5ydRIc21BO1kHyTayTafKzz9hLw7izP3AeQ=w800-h500-rw')),
+                        child:
+                        Image.network('https://lh3.googleusercontent.com/ZdMdznf08GDWOLY3pKfjQudbAxxQkFQ5ydRIc21BO1kHyTayTafKzz9hLw7izP3AeQ=w800-h500-rw')
+                    ),
                     Container(
                       child: SizedBox(
                         width: responsive.wp(96),
@@ -63,7 +67,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
                                 ),
                                 Column(
                                   children: [
-                                    const Text('Aviable Balance',
+                                    const Text('Available Balance',
                                     style: TextStyle(
                                       color: Color(0xffF0F5FD),
                                       fontSize: 20,
@@ -79,9 +83,9 @@ class _CryptoScreenState extends State<CryptoScreen> {
                                           fontWeight: FontWeight.bold,
                                         color: Color(0xffF0F5FD)
                                       ),
-                                    )
+                                    ),
                                   ],
-                                )
+                                ),
                               ],
                             ),
                           ],
@@ -93,17 +97,72 @@ class _CryptoScreenState extends State<CryptoScreen> {
               ),
           ],
         ),
+        ListView.builder(
+            itemCount: priceCryptos.length,
+            scrollDirection: Axis.vertical,
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index){
+              return SingleChildScrollView(
+                  child:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment:CrossAxisAlignment.center,
+                    children: [
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: SizedBox(
+                          height: responsive.ip(6),
+                          width: responsive.wp(96),
+                          child:
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: responsive.ip(50),
+                                width: responsive.wp(10),
+                                child: Image.network(priceCryptos[index]['image']),
+                              ),
+                              SizedBox(width: responsive.wp(4)),
+                              Text(priceCryptos[index]['name'],
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(width: responsive.wp(10)),
+                              Text('\$${oCcy.format(priceCryptos[index]['current_price'])}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                              )
+                            ],
+                          )
+                      ),
+                    ),
+                    ],
+                  ),
+              );
+            }
+        ),
+
       ],
     );
   }
 
-  Future <List <dynamic>> getPrices() async {
-    try {
-      var response = await Dio().get(reqUrl);
-      print(response);
-    } catch (e) {
+  void getPrices() async{
+    try{
+      var response = await http.get(Uri.parse(reqUrl));
+      var rb = response.body;
+      setState(() {
+        priceCryptos = json.decode(rb) as List;
+      });
+    } catch(e){
       print(e);
     }
-    return <dynamic>[response];
   }
 }

@@ -30,14 +30,14 @@ class _HomeScreenState extends State<HomeScreen> {
     var responsive = Responsive(context);
 
     return Scaffold(
-      backgroundColor: Color(0xffF0F5FD),
+      backgroundColor: Color(0xffE9EDF3FF),
       body:
           Column(
             children: [
               AppBar(
                 title: const Text('Crypto Vault'),
                 centerTitle: true,
-                backgroundColor: Color(0xff6200EE),
+                backgroundColor: Color(0xff6200ee),
               ),
               _screenList[_selectedIndex],
             ],
@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Crypto',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.flutter_dash_rounded),
+            icon: Icon(Icons.swap_horizontal_circle_outlined),
             label: 'Swap',
           ),
           BottomNavigationBarItem(
