@@ -1,3 +1,5 @@
+import 'package:crypto_vault/util/custom_dialog.dart';
+import 'package:crypto_vault/util/gobal_variables.dart';
 import 'package:crypto_vault/util/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -24,7 +26,28 @@ class _SwapScreenState extends State<SwapScreen> {
     var responsive = Responsive(context);
     return Column(
      children: [
-       SizedBox(height: responsive.ip(8)),
+       SizedBox(height: responsive.ip(8),
+       child:Column(
+         children: [
+           const Text('Current Balance',
+             style: TextStyle(
+                 color: Colors.black,
+                 fontSize: 20,
+                 fontWeight: FontWeight.bold
+             ),
+           ),
+           SizedBox(
+             height: responsive.ip(0.6),
+           ),
+           Text('\$${oCcy.format(cashAviable)}',
+             style: const TextStyle(
+                 fontSize: 30,
+                 fontWeight: FontWeight.bold,
+                 color: Colors.black
+             ),
+           ),
+         ],
+       )),
        Text('\$${oCcy.format(priceToSwap).toString()}',
         style: const TextStyle(
           fontSize: 80,
@@ -226,13 +249,26 @@ class _SwapScreenState extends State<SwapScreen> {
   addNum(int number){
     String numberAdd = number.toString();
     String priceS = priceToSwap.toString();
+    if(int.parse('$priceS$numberAdd') > cashAviable ){
+      showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return CustomDialog(
+              text: 'Insufficient funds',
+              onPressedYes: () {
+                Navigator.pop(context);
+              },
+              onPressedNo: () {
+              },
+              buttonTextNo: '',
+              buttonTextYes: 'Retry',
+            );
+          });
+    }else{
     if (!mounted) return;
     setState(() {
       priceToSwap = int.parse('$priceS$numberAdd');
     });
-  }
-
-  _wip(){
-    print('WIP');
+    }
   }
 }

@@ -101,7 +101,9 @@ class _CryptoScreenState extends State<CryptoScreen> {
                             height: responsive.ip(7),
                             width: responsive.wp(20),
                             child: ElevatedButton(
-                                onPressed: _wip,
+                                onPressed: (){
+
+                                },
                                 style: ElevatedButton.styleFrom(primary: Colors.white,
                                 shape: const CircleBorder(),
                                     padding: const EdgeInsets.all(20)),
@@ -115,7 +117,9 @@ class _CryptoScreenState extends State<CryptoScreen> {
                             height: responsive.ip(7),
                             width: responsive.wp(20),
                             child: ElevatedButton(
-                                onPressed: _wip,
+                                onPressed: (){
+
+                                },
                                 style: ElevatedButton.styleFrom(primary: Colors.white,
                                     shape: const CircleBorder(),
                                     padding: const EdgeInsets.all(20)),
@@ -213,10 +217,5 @@ class _CryptoScreenState extends State<CryptoScreen> {
     } catch(e){
       print(e);
     }
-  }
-
-  // DELETE THIS AT THE END
-  _wip(){
-    print('WIP');
   }
 }
