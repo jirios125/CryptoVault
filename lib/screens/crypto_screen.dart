@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:crypto_vault/util/gobal_variables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_vault/util/responsive.dart';
@@ -13,12 +14,7 @@ class CryptoScreen extends StatefulWidget {
 }
 
 class _CryptoScreenState extends State<CryptoScreen> {
-  int cashAviable = 12500;
   final oCcy = new NumberFormat("#,##0.00", "en_US");
-  String reqUrl = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,binancecoin,cardano,solana';
-  late String prices;
-  List priceCryptos = [];
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +63,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
                                 ),
                                 Column(
                                   children: [
-                                    const Text('Available Balance',
+                                    const Text('Current Balance',
                                     style: TextStyle(
                                       color: Color(0xffF0F5FD),
                                       fontSize: 20,
@@ -90,6 +86,59 @@ class _CryptoScreenState extends State<CryptoScreen> {
                             ),
                           ],
                         ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 35,
+                      right: 24,
+                      child:
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SizedBox(
+                            height: responsive.ip(7),
+                            width: responsive.wp(20),
+                            child: ElevatedButton(
+                                onPressed: _wip,
+                                style: ElevatedButton.styleFrom(primary: Colors.white,
+                                shape: const CircleBorder(),
+                                    padding: const EdgeInsets.all(20)),
+                                child: const Icon(Icons.arrow_circle_down_sharp,
+                                  color: Colors.black,
+                                  size: 30,
+                                )),
+                          ),
+                          SizedBox(width: responsive.wp(12)),
+                          SizedBox(
+                            height: responsive.ip(7),
+                            width: responsive.wp(20),
+                            child: ElevatedButton(
+                                onPressed: _wip,
+                                style: ElevatedButton.styleFrom(primary: Colors.white,
+                                    shape: const CircleBorder(),
+                                    padding: const EdgeInsets.all(20)),
+                                child: const Icon(Icons.arrow_circle_up_sharp,
+                                  color: Colors.black,
+                                  size: 30,
+                                )),
+                          ),
+                          SizedBox(width: responsive.wp(12)),
+                          SizedBox(
+                            height: responsive.ip(7),
+                            width: responsive.wp(20),
+                            child: ElevatedButton(
+                                onPressed: getPrices,
+                                style: ElevatedButton.styleFrom(primary: Colors.white,
+                                    shape: const CircleBorder(),
+                                    padding: const EdgeInsets.all(20)),
+                                child: const Icon(Icons.refresh,
+                                  color: Colors.black,
+                                  size: 30,
+                                )),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -149,7 +198,6 @@ class _CryptoScreenState extends State<CryptoScreen> {
               );
             }
         ),
-
       ],
     );
   }
@@ -161,8 +209,14 @@ class _CryptoScreenState extends State<CryptoScreen> {
       setState(() {
         priceCryptos = json.decode(rb) as List;
       });
+      print('Crypto prices refreshed!');
     } catch(e){
       print(e);
     }
+  }
+
+  // DELETE THIS AT THE END
+  _wip(){
+    print('WIP');
   }
 }
