@@ -14,7 +14,6 @@ class CryptoScreen extends StatefulWidget {
 }
 
 class _CryptoScreenState extends State<CryptoScreen> {
-  final oCcy = new NumberFormat("#,##0.00", "en_US");
 
   @override
   Widget build(BuildContext context) {
@@ -162,6 +161,7 @@ class _CryptoScreenState extends State<CryptoScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment:CrossAxisAlignment.center,
                     children: [
+                      SizedBox(width: responsive.wp(1.2)),
                     Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),

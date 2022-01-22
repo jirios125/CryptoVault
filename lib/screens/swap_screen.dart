@@ -1,8 +1,8 @@
 import 'package:crypto_vault/util/custom_dialog.dart';
 import 'package:crypto_vault/util/gobal_variables.dart';
 import 'package:crypto_vault/util/responsive.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 
 class SwapScreen extends StatefulWidget {
@@ -13,12 +13,14 @@ class SwapScreen extends StatefulWidget {
 }
 
 class _SwapScreenState extends State<SwapScreen> {
-  final oCcy = new NumberFormat("#,##0.00", "en_US");
   int priceToSwap = 0;
+  List<String> cryptos =[];
+  String? value;
 
   @override
   void initState() {
     super.initState();
+    cryptoNames();
   }
 
   @override
@@ -54,12 +56,45 @@ class _SwapScreenState extends State<SwapScreen> {
           fontWeight: FontWeight.bold
         ),
        ),
-       SizedBox(height: responsive.ip(14)),
+       SizedBox(height: responsive.ip(20),
+       child: Row(
+         children: [
+           SizedBox(width: responsive.wp(2)),
+           SizedBox(
+            height: responsive.ip(8),
+             width: responsive.wp(42),
+             child: const Card(
+
+             ),
+           ),
+           SizedBox(
+             height: responsive.ip(10),
+             child: IconButton(onPressed: (){
+
+             },
+                 icon: const Icon(Icons.swap_horiz_rounded)),
+           ),
+           SizedBox(
+             height: responsive.ip(8),
+             width: responsive.wp(42),
+               child: Center(
+                 child: DropdownButton<dynamic>(
+                   isExpanded: true,
+                   items:
+                   cryptos.map(buildMenuItem).toList(),
+                    onChanged: (value) => setState(() {
+                      this.value = value;
+                    }),
+                 ),
+               ),
+           )
+         ],
+       )),
        Row(
          mainAxisAlignment: MainAxisAlignment.spaceAround,
          crossAxisAlignment: CrossAxisAlignment.center,
          children: [
-           FlatButton(
+           TextButton(
                onPressed:(){
                  addNum(1);
                  },
@@ -67,11 +102,12 @@ class _SwapScreenState extends State<SwapScreen> {
                  '1',
                  style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 40
+                   fontSize: 30,
+                     color: Colors.black
                  ),
                ),
            ),
-           FlatButton(
+           TextButton(
              onPressed: (){
                addNum(2);
              },
@@ -79,11 +115,12 @@ class _SwapScreenState extends State<SwapScreen> {
                  '2',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 40
+                   fontSize: 30,
+                   color: Colors.black
                ),
              ),
            ),
-           FlatButton(
+           TextButton(
              onPressed: (){
                addNum(3);
              },
@@ -91,18 +128,19 @@ class _SwapScreenState extends State<SwapScreen> {
                  '3',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 40
+                   fontSize: 30,
+                   color: Colors.black
                ),
              ),
            ),
          ],
        ),
-       SizedBox(height: responsive.ip(6)),
+       SizedBox(height: responsive.ip(4)),
        Row(
          mainAxisAlignment: MainAxisAlignment.spaceAround,
          crossAxisAlignment: CrossAxisAlignment.center,
          children: [
-           FlatButton(
+           TextButton(
              onPressed: (){
                addNum(4);
              },
@@ -110,11 +148,12 @@ class _SwapScreenState extends State<SwapScreen> {
                '4',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 40
+                   fontSize: 30,
+                   color: Colors.black
                ),
              ),
            ),
-           FlatButton(
+           TextButton(
              onPressed: (){
                addNum(5);
              },
@@ -122,11 +161,12 @@ class _SwapScreenState extends State<SwapScreen> {
                '5',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 40
+                   fontSize: 30,
+                   color: Colors.black
                ),
              ),
            ),
-           FlatButton(
+           TextButton(
              onPressed: (){
                addNum(6);
              },
@@ -134,18 +174,19 @@ class _SwapScreenState extends State<SwapScreen> {
                '6',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 40
+                   fontSize: 30,
+                   color: Colors.black
                ),
              ),
            ),
          ],
        ),
-       SizedBox(height: responsive.ip(6)),
+       SizedBox(height: responsive.ip(4)),
        Row(
          mainAxisAlignment: MainAxisAlignment.spaceAround,
          crossAxisAlignment: CrossAxisAlignment.center,
          children: [
-           FlatButton(
+           TextButton(
              onPressed:(){
                addNum(7);
              },
@@ -153,11 +194,12 @@ class _SwapScreenState extends State<SwapScreen> {
                '7',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 40
+                   fontSize: 30,
+                   color: Colors.black
                ),
              ),
            ),
-           FlatButton(
+           TextButton(
              onPressed:(){
                addNum(8);
              },
@@ -165,11 +207,12 @@ class _SwapScreenState extends State<SwapScreen> {
                '8',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 40
+                   fontSize: 30,
+                   color: Colors.black
                ),
              ),
            ),
-           FlatButton(
+           TextButton(
              onPressed: (){
                addNum(9);
              },
@@ -177,18 +220,19 @@ class _SwapScreenState extends State<SwapScreen> {
                '9',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 40
+                   fontSize: 30,
+                   color: Colors.black
                ),
              ),
            ),
          ],
        ),
-       SizedBox(height: responsive.ip(6)),
+       SizedBox(height: responsive.ip(4)),
        Row(
          mainAxisAlignment: MainAxisAlignment.spaceAround,
          crossAxisAlignment: CrossAxisAlignment.center,
          children: [
-           FlatButton(
+           TextButton(
              onPressed: (){
                setState(() {
                  priceToSwap = 0;
@@ -198,11 +242,12 @@ class _SwapScreenState extends State<SwapScreen> {
                'X',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 30
+                   fontSize: 30,
+                   color: Colors.black
                ),
              ),
            ),
-           FlatButton(
+           TextButton(
              onPressed: (){
                addNum(0);
              },
@@ -210,17 +255,19 @@ class _SwapScreenState extends State<SwapScreen> {
                '0',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 40
+                   fontSize: 30,
+                   color: Colors.black
                ),
              ),
            ),
-           FlatButton(
+           TextButton(
              onPressed: deleteNum,
              child: const Text(
                '<',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 38
+                   fontSize: 38,
+                   color: Colors.black
                ),
              ),
            ),
@@ -271,4 +318,24 @@ class _SwapScreenState extends State<SwapScreen> {
     });
     }
   }
+
+  cryptoNames(){
+    for (var i = 0; i < priceCryptos.length; i++) {
+      cryptos.add(priceCryptos[i]['name']);
+    }
+  }
+
+  DropdownMenuItem<dynamic> buildMenuItem(dynamic cryptos) =>
+      DropdownMenuItem(
+        value: cryptos,
+        child: Row(
+          children: [
+            Image.network(priceCryptos[1]['image'],
+              height: 30,
+              width: 30,
+            ),
+            Text(cryptos),
+          ],
+        ),
+      );
 }
