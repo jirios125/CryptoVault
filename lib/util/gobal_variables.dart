@@ -7,7 +7,10 @@ final oCcy = new NumberFormat("#,##0.00", "en_US");
 
 
 //USD Cash Avaiable
-int cashAviable = 12500;
+int cashAviable = 0;
 
 //Cryptos
-List<double> balances =[0.0,0.0,0.0,0.0,0.0,0.0,0.0,];
+dynamic wallet = {
+  'names': [],
+  'balances': []
+};

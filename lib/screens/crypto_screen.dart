@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:crypto_vault/util/custom_dialog.dart';
 import 'package:crypto_vault/util/gobal_variables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,15 @@ class CryptoScreen extends StatefulWidget {
 class _CryptoScreenState extends State<CryptoScreen> {
 
   @override
+  void initState() {
+    super.initState();
+    setBalances();
+  }
+
+  @override
   Widget build(BuildContext context) {
     getPrices();
+    final _usdAdd = TextEditingController();
     var responsive = Responsive(context);
     return Column(
       children: [
@@ -101,7 +109,31 @@ class _CryptoScreenState extends State<CryptoScreen> {
                             width: responsive.wp(20),
                             child: ElevatedButton(
                                 onPressed: (){
-
+                                   showDialog(context: context, builder: (context) =>
+                                       AlertDialog(
+                                        title: const Text('Charge money!'),
+                                        content: TextField(
+                                            controller: _usdAdd,
+                                            keyboardType: TextInputType.number,
+                                            decoration: const InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText: 'Add money',
+                                                hintStyle: TextStyle(color:Color(0xff707CFF))
+                                            ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                           child: const Text('Accept'),
+                                           onPressed: (){
+                                              setState(() {
+                                                cashAviable = cashAviable + int.parse(_usdAdd.text);
+                                              });
+                                              Navigator.pop(context);
+                                             },
+                                            ),
+                                          ],
+                                      )
+                                  );
                                 },
                                 style: ElevatedButton.styleFrom(primary: Colors.white,
                                 shape: const CircleBorder(),
@@ -217,5 +249,18 @@ class _CryptoScreenState extends State<CryptoScreen> {
     } catch(e){
       print(e);
     }
+  }
+
+  setBalances(){
+    List<dynamic> tempBalances = [];
+    List<dynamic> tempNames = [];
+    for (var i = 0; i < priceCryptos.length; i++) {
+      tempBalances.add(0.0);
+      tempNames.add(priceCryptos[i]['name']);
+    }
+    setState(() {
+      wallet['balances'] = tempBalances;
+      wallet['names'] = tempNames;
+    });
   }
 }

@@ -13,14 +13,16 @@ class SwapScreen extends StatefulWidget {
 }
 
 class _SwapScreenState extends State<SwapScreen> {
-  int priceToSwap = 0;
-  List<String> cryptos =[];
-  String? value;
-
+  int priceToSwap =0;
+  String cryptoToSwap = '0.0';
+  final List<Map> _jsonData = [];
+  String? _selected;
+  String? _selected2;
+  bool coinSelected = false;
   @override
   void initState() {
     super.initState();
-    cryptoNames();
+    cryptoData();
   }
 
   @override
@@ -31,61 +33,157 @@ class _SwapScreenState extends State<SwapScreen> {
        SizedBox(height: responsive.ip(8),
        child:Column(
          children: [
-           const Text('Current Balance',
-             style: TextStyle(
+           SizedBox(height: responsive.ip(1)),
+            coinSelected ?
+            Text('Current $_selected2 Balance',
+             style: const TextStyle(
                  color: Colors.black,
-                 fontSize: 20,
+                 fontSize: 15,
                  fontWeight: FontWeight.bold
              ),
-           ),
+           )
+            :const Text('Current USD Balance',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold
+              ),
+            ),
            SizedBox(
              height: responsive.ip(0.6),
            ),
-           Text('\$${oCcy.format(cashAviable)}',
+           coinSelected
+           ? getActualPrice(_selected2)
+           :Text('\$${oCcy.format(cashAviable)}',
              style: const TextStyle(
-                 fontSize: 30,
+                 fontSize: 20,
                  fontWeight: FontWeight.bold,
                  color: Colors.black
              ),
            ),
          ],
        )),
-       Text('\$${oCcy.format(priceToSwap).toString()}',
-        style: const TextStyle(
-          fontSize: 80,
-          fontWeight: FontWeight.bold
-        ),
+       SizedBox(
+         child:
+             coinSelected
+                 ?  Text(cryptoToSwap,
+               style: const TextStyle(
+                   fontSize:65,
+                   fontWeight: FontWeight.bold
+               ),
+             )
+              :Text('\$${oCcy.format(priceToSwap).toString()}',
+              style: const TextStyle(
+                fontSize:65,
+                fontWeight: FontWeight.bold
+              ),
+         ),
        ),
-       SizedBox(height: responsive.ip(20),
+       SizedBox(height: responsive.ip(12),
        child: Row(
          children: [
            SizedBox(width: responsive.wp(2)),
            SizedBox(
-            height: responsive.ip(8),
+             height: responsive.ip(8),
              width: responsive.wp(42),
-             child: const Card(
-
+             child:  Center(
+                 child: Card(
+                   child: Row(
+                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                     children: [
+                       Expanded(
+                           child: DropdownButtonHideUnderline(
+                               child:ButtonTheme(
+                                 alignedDropdown: true,
+                                 child: DropdownButton(
+                                   hint: Text('Select Crypto!'),
+                                   value: _selected2,
+                                   onChanged: (newValue){
+                                     setState(() {
+                                       _selected2 = newValue as String?;
+                                       if(_selected2 == 'USD'){
+                                         coinSelected = false;
+                                       }else{
+                                         coinSelected = true;
+                                       }
+                                     });
+                                   },
+                                   items: _jsonData.map((cryptoItem) {
+                                     return DropdownMenuItem(
+                                         value: cryptoItem['name'],
+                                         child: Row(
+                                           children: [
+                                             Image.network(cryptoItem['image'],
+                                                 width: 20,
+                                                 height: 20),
+                                             SizedBox(width: responsive.wp(2)),
+                                             Text(cryptoItem['name'])
+                                           ],
+                                         )
+                                     );
+                                   }).toList(),
+                                 ),
+                               )
+                           )
+                       )
+                     ],
+                   ),
+                 )
              ),
            ),
            SizedBox(
              height: responsive.ip(10),
              child: IconButton(onPressed: (){
-
+               setState(() {
+                 String? temp;
+                 temp = _selected;
+                 _selected = _selected2;
+                 _selected2 = temp;
+               });
              },
                  icon: const Icon(Icons.swap_horiz_rounded)),
            ),
            SizedBox(
              height: responsive.ip(8),
              width: responsive.wp(42),
-               child: Center(
-                 child: DropdownButton<dynamic>(
-                   isExpanded: true,
-                   items:
-                   cryptos.map(buildMenuItem).toList(),
-                    onChanged: (value) => setState(() {
-                      this.value = value;
-                    }),
-                 ),
+               child:  Center(
+                 child: Card(
+                   child: Row(
+                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                     children: [
+                       Expanded(
+                           child: DropdownButtonHideUnderline(
+                             child:ButtonTheme(
+                               alignedDropdown: true,
+                               child: DropdownButton(
+                                 hint: Text('Select Crypto!'),
+                                 value: _selected,
+                                 onChanged: (newValue){
+                                   setState(() {
+                                     _selected = newValue as String?;
+                                   });
+                                 },
+                                 items: _jsonData.map((cryptoItem) {
+                                   return DropdownMenuItem(
+                                     value: cryptoItem['name'],
+                                       child: Row(
+                                         children: [
+                                           Image.network(cryptoItem['image'],
+                                           width: 20,
+                                           height: 20),
+                                           SizedBox(width: responsive.wp(2)),
+                                           Text(cryptoItem['name'])
+                                         ],
+                                       )
+                                   );
+                                 }).toList(),
+                               ),
+                             )
+                           )
+                       )
+                     ],
+                   ),
+                 )
                ),
            )
          ],
@@ -234,15 +332,21 @@ class _SwapScreenState extends State<SwapScreen> {
          children: [
            TextButton(
              onPressed: (){
-               setState(() {
-                 priceToSwap = 0;
-               });
+               if(_selected2 == 'USD'){
+                 setState(() {
+                   priceToSwap = cashAviable;
+                 });
+               }else{
+                 setState(() {
+                   cryptoToSwap = getPrice(_selected2);
+                 });
+               }
              },
              child: const Text(
-               'X',
+               'MAX',
                style: TextStyle(
                    fontWeight: FontWeight.bold,
-                   fontSize: 30,
+                   fontSize: 20,
                    color: Colors.black
                ),
              ),
@@ -272,31 +376,56 @@ class _SwapScreenState extends State<SwapScreen> {
              ),
            ),
          ],
-       )
+       ),
+       SizedBox(height: responsive.ip(0.5)),
+       SizedBox(
+         height: responsive.ip(8),
+         width: responsive.wp(96),
+         child: Card(
+           child: TextButton(
+               onPressed: (){
 
+             },
+               child: Text('Next')
+           ),
+         ),
+       )
      ],
    );
   }
 
   deleteNum(){
     int characters = priceToSwap.toString().length;
+    int charactersCrypto = cryptoToSwap.length;
     String tempPrice;
-    if(priceToSwap < 9){
-      setState(() {
-        priceToSwap = 0;
-      });
+    if(_selected2 != 'USD'){
+      if(charactersCrypto <= 3){
+        print('Invalid delete');
+      }else {
+        setState(() {
+          tempPrice =
+              cryptoToSwap.toString().substring(0, charactersCrypto - 1);
+          cryptoToSwap = tempPrice;
+        });
+      }
     }else {
-      setState(() {
+        if(priceToSwap.toString().length == 1){
+          setState(() {
+            priceToSwap = 0;
+          });
+        }else{
         tempPrice = priceToSwap.toString().substring(0, characters - 1);
-        priceToSwap = int.parse(tempPrice);
-      });
+        setState(() {
+          priceToSwap = int.parse(tempPrice);
+        });
+      }
     }
   }
 
   addNum(int number){
     String numberAdd = number.toString();
     String priceS = priceToSwap.toString();
-    if(int.parse('$priceS$numberAdd') > cashAviable ){
+    if(double.parse('$priceS$numberAdd') > cashAviable ){
       showDialog<void>(
           context: context,
           builder: (BuildContext context) {
@@ -312,30 +441,57 @@ class _SwapScreenState extends State<SwapScreen> {
             );
           });
     }else{
-    if (!mounted) return;
-    setState(() {
-      priceToSwap = int.parse('$priceS$numberAdd');
-    });
+      if(_selected2 == 'USD'){
+        setState(() {
+          priceToSwap = int.parse('$priceS$numberAdd');
+        });
+      }else {
+        setState(() {
+          cryptoToSwap = '$cryptoToSwap$numberAdd';
+        });
+      }
     }
   }
 
-  cryptoNames(){
+  cryptoData() {
+    dynamic usd = {
+      'name': 'USD',
+      'image': 'https://image.flaticon.com/icons/png/512/25/25228.png'
+    };
+    _jsonData.add(usd);
     for (var i = 0; i < priceCryptos.length; i++) {
-      cryptos.add(priceCryptos[i]['name']);
+      dynamic tempData = {
+        'name': priceCryptos[i]['name'],
+        'image': priceCryptos[i]['image']
+      };
+      _jsonData.add(tempData);
     }
   }
 
-  DropdownMenuItem<dynamic> buildMenuItem(dynamic cryptos) =>
-      DropdownMenuItem(
-        value: cryptos,
-        child: Row(
-          children: [
-            Image.network(priceCryptos[1]['image'],
-              height: 30,
-              width: 30,
-            ),
-            Text(cryptos),
-          ],
-        ),
-      );
+  Widget getActualPrice(selectedCoin){
+    double? coinBalance;
+    for (var i = 0; i < wallet['names'].length; i++) {
+      if(selectedCoin == wallet['names'][i]) {
+        coinBalance = wallet['balances'][i];
+        }
+    }
+      return Text(oCcy.format(coinBalance),
+      style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.black
+      ),
+    );
+  }
+
+  String getPrice(selectedCoin){
+    double? coinBalance;
+    for (var i = 0; i < wallet['names'].length; i++) {
+      if(selectedCoin == wallet['names'][i]) {
+        coinBalance = wallet['balances'][i];
+      }
+    }
+    return coinBalance.toString();
+  }
 }
+

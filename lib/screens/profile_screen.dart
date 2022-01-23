@@ -24,6 +24,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
           fontSize: 50,
           fontWeight: FontWeight.bold
         )),
+        const Text('USD Cash',
+            style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold
+            )),
+        SizedBox(height: responsive.ip(2)),
+        Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: SizedBox(
+              height: responsive.ip(6),
+              width: responsive.wp(96),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: responsive.ip(50),
+                    width: responsive.wp(10),
+                    child: Image.network('https://image.flaticon.com/icons/png/512/25/25228.png'),
+                  ),
+                  SizedBox(width: responsive.wp(4)),
+                  const Text('USD',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(width: responsive.wp(10)),
+                  Text(oCcy.format(cashAviable),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                ],
+              )
+            )
+        ),
+        SizedBox(height: responsive.ip(2)),
+        const Text('Cryptos',
+            style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold
+            )),
         ListView.builder(
             itemCount: priceCryptos.length,
             scrollDirection: Axis.vertical,
@@ -62,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               SizedBox(width: responsive.wp(10)),
-                              Text(oCcy.format(balances[index]),
+                              Text(oCcy.format(wallet['balances'][index]),
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
