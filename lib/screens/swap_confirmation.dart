@@ -1,6 +1,5 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:crypto_vault/util/custom_dialog.dart';
 import 'package:crypto_vault/util/gobal_variables.dart';
 import 'package:crypto_vault/util/responsive.dart';
@@ -22,18 +21,27 @@ class Swap extends StatefulWidget {
 }
 
 class _Swap extends State<Swap> {
+  //Data needed to make the swap
   String? fromImg;
   String? toImg;
   double priceFrom = 0.0;
   double priceTo = 0.0;
+
+  //Receive its what the user will receive after the swap
   double receive = 0.0;
+
+  //Variables
   bool isUsdToCrypto = true;
+  int secsLeft = 60;
+
+
 
 
   @override
   void initState() {
     super.initState();
     lookForImg();
+    _startCountDown();
   }
 
   @override
@@ -41,6 +49,7 @@ class _Swap extends State<Swap> {
     var responsive = Responsive(context);
     lookForPrices();
     getPrices();
+    updatePrices();
     return Scaffold(
       backgroundColor: const Color(0xffe9edf3ff),
       appBar: AppBar(
@@ -59,108 +68,155 @@ class _Swap extends State<Swap> {
             fontSize: 40
           )),
           SizedBox(height: responsive.ip(3)),
-          SizedBox(
-              height: responsive.ip(10),
-              width: responsive.wp(96),
-            child: Card(
-            semanticContainer: true,
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            shape:RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-              ),
-            child:
-                Row(
-                  children: [
-                    SizedBox(width: responsive.wp(4)),
-                    const Text('From',
-                        style:TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold
-                        )),
-                    SizedBox(width: responsive.wp(2)),
-                    SizedBox(
-                        height: responsive.ip(6),
-                        child: Image.network(fromImg.toString())),
-                    Text(widget.from,
-                        style:const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold
-                        )),
-                    SizedBox(width: responsive.wp(4)),
-                    const Text('You will sell',
-                        style:TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold
-                        )),
-                    SizedBox(width: responsive.wp(4)),
-                    isUsdToCrypto
-                        ?Text('\$${widget.priceSwap.toString()}',
-                        style:const TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold
-                        ))
-                        :Text(widget.cryptoSwap.toString(),
-                        style:const TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold
-                        ))
-                  ],
-                  ),
-            ),
-          ),
+          fromCard(),
           Container(
               padding: const EdgeInsets.all(10.0),
               child: const Icon(Icons.arrow_downward_rounded)),
-          SizedBox(
-            height: responsive.ip(10),
-            width: responsive.wp(96),
-            child: Card(
-              semanticContainer: true,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              shape:RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child:
-              Row(
-                children: [
-                  SizedBox(width: responsive.wp(4)),
-                  const Text('To',
-                      style:TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold
-                      )),
-                  SizedBox(width: responsive.wp(2)),
-                  SizedBox(
-                      height: responsive.ip(6),
-                      child: Image.network(toImg.toString())),
-                  Text(widget.to,
-                      style:const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold
-                      )),
-                  SizedBox(width: responsive.wp(4)),
-                  const Text('You will receive',
-                      style:TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold
-                      )),
-                  calcToPrice(),
-                  SizedBox(width: responsive.wp(4)),
-                ],
-              ),
-            ),
-          ),
+          toCard(),
+          SizedBox(height: responsive.ip(33)),
+          timeLeft(),
           confirmButton(),
         ],
       ),
     );
   }
 
+  Widget fromCard(){
+    var responsive = Responsive(context);
+    return SizedBox(
+      height: responsive.ip(10),
+      width: responsive.wp(96),
+      child: Card(
+        semanticContainer: true,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape:RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child:
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(width: responsive.wp(4)),
+              const Text('From',
+                  style:TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold
+                  )),
+              SizedBox(width: responsive.wp(2)),
+              SizedBox(
+                  height: responsive.ip(6),
+                  child: Image.network(fromImg.toString())),
+              Text(widget.from,
+                  style:const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold
+                  )),
+              SizedBox(width: responsive.wp(4)),
+              const Text('You will sell',
+                  style:TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold
+                  )),
+              SizedBox(width: responsive.wp(4)),
+              isUsdToCrypto
+                  ?Text('\$${widget.priceSwap.toString()}',
+                  style:const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold
+                  ))
+                  :Text(widget.cryptoSwap.toString(),
+                  style:const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold
+                  ))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget toCard(){
+    var responsive = Responsive(context);
+    return SizedBox(
+      height: responsive.ip(10),
+      width: responsive.wp(96),
+      child: Card(
+        semanticContainer: true,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape:RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child:
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(width: responsive.wp(4)),
+              const Text('To',
+                  style:TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold
+                  )),
+              SizedBox(width: responsive.wp(2)),
+              SizedBox(
+                  height: responsive.ip(6),
+                  child: Image.network(toImg.toString())),
+              Text(widget.to,
+                  style:const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold
+                  )),
+              SizedBox(width: responsive.wp(4)),
+              const Text('You will receive',
+                  style:TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold
+                  )),
+              calcToPrice(),
+              SizedBox(width: responsive.wp(4)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget timeLeft(){
+    return Center(
+      child: Text('You have ${secsLeft.toString()} seconds to confirm the swap before prices change',
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+        ),
+      ),
+    );
+  }
+
+  void _startCountDown(){
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if(secsLeft > 0){
+        if(mounted) {
+          setState(() {
+            secsLeft--;
+          });
+        }
+      }else{
+        timer.cancel();
+      }
+    });
+  }
+
   lookForImg(){
     if(widget.cryptoSwap != '0.0'){
-      setState(() {
-        isUsdToCrypto = false;
-      });
+      if(mounted) {
+        setState(() {
+          isUsdToCrypto = false;
+        });
+      }
     }
     if(widget.from == 'USD'){
       fromImg = 'https://image.flaticon.com/icons/png/512/25/25228.png';
@@ -184,21 +240,30 @@ class _Swap extends State<Swap> {
     }
     for (var i = 0; i < priceCryptos.length; i++) {
         if(widget.from == priceCryptos[i]['name']){
-          setState(() {
-            tempPF = priceCryptos[i]['current_price'].toString();
-            priceFrom = double.parse(tempPF.toString());
-          });
+          if(mounted) {
+            setState(() {
+              tempPF = priceCryptos[i]['current_price'].toString();
+              priceFrom = double.parse(tempPF.toString());
+            });
+          }
         }
       if(widget.to == priceCryptos[i]['name']){
-        setState(() {
-          tempPT = priceCryptos[i]['current_price'].toString();
-          priceTo = double.parse(tempPT.toString());
-        });
+        if(mounted) {
+          setState(() {
+            tempPT = priceCryptos[i]['current_price'].toString();
+            priceTo = double.parse(tempPT.toString());
+          });
+        }
       }
     }
   }
 
   Widget calcToPrice (){
+    if(mounted) {
+      setState(() {
+        receive = priceFrom / priceTo;
+      });
+    }
     return Text(receive.toStringAsFixed(8),
       style: const TextStyle(
         fontWeight: FontWeight.bold
@@ -206,27 +271,30 @@ class _Swap extends State<Swap> {
   }
 
   confirmSwap(){
-    setState(() {
-      receive = priceFrom / priceTo;
-    });
     if(widget.from == 'USD'){
-      setState(() {
-        cashAviable = cashAviable - priceFrom.toInt();
-      });
+      if(mounted) {
+        setState(() {
+          cashAviable = cashAviable - widget.priceSwap;
+        });
+      }
     }else{
       for (var i = 0; i < wallet['names'].length; i++) {
         if(widget.from == wallet['names'][i]){
-          setState(() {
-            wallet['balances'][i] = wallet['balances'][i] - priceFrom;
-          });
+          if(mounted) {
+            setState(() {
+              wallet['balances'][i] = wallet['balances'][i] - widget.cryptoSwap;
+            });
+          }
           }
         }
       }
     for (var i = 0; i < wallet['names'].length; i++){
       if(widget.to == wallet['names'][i]){
-        setState(() {
-          wallet['balances'][i] = wallet['balances'][i] + receive;
-        });
+        if(mounted) {
+          setState(() {
+            wallet['balances'][i] = wallet['balances'][i] + receive;
+          });
+        }
       }
     }
   }
@@ -235,9 +303,11 @@ class _Swap extends State<Swap> {
     try{
       var response = await http.get(Uri.parse(reqUrl));
       var rb = response.body;
-      setState(() {
-        priceCryptos = json.decode(rb) as List;
-      });
+      if(mounted) {
+        setState(() {
+          priceCryptos = json.decode(rb) as List;
+        });
+      }
       print('Crypto prices refreshed!');
     } catch(e){
       print(e);
@@ -252,11 +322,24 @@ class _Swap extends State<Swap> {
       child: Card(
         child: TextButton(onPressed: (){
           confirmSwap();
+          Navigator.pop(context);
         },
-            child: Text('Confirm Swap')
+            child: const Text('Confirm Swap')
         ),
       ),
     );
+  }
+
+  updatePrices(){
+    if(secsLeft == 0){
+      getPrices();
+      lookForPrices();
+      if(mounted) {
+        setState(() {
+          secsLeft = 60;
+        });
+      }
+    }
   }
 }
 

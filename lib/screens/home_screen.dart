@@ -48,25 +48,29 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.stairs),
-            label: 'Crypto',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.swap_horizontal_circle_outlined),
-            label: 'Swap',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0xfff9aa33),
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: bottomNav(),
+    );
+  }
+
+  Widget bottomNav(){
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.stairs),
+          label: 'Crypto',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.swap_horizontal_circle_outlined),
+          label: 'Swap',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Profile',
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: const Color(0xfff9aa33),
+      onTap: _onItemTapped,
     );
   }
 }
