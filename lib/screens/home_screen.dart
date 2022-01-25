@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:crypto_vault/util/gobal_variables.dart';
 import 'package:flutter/material.dart';
 import 'screens.dart';
 
@@ -17,6 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   static const List<Widget> _screenList = [
     CryptoScreen(),
     SwapScreen(),
@@ -26,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffE9EDF3FF),
+      backgroundColor: const Color(0xffe9edf3ff),
       body:
           SingleChildScrollView(
             child: Column(
@@ -34,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 AppBar(
                   title: const Text('Crypto Vault'),
                   centerTitle: true,
-                  backgroundColor: Color(0xff6200ee),
+                  backgroundColor: const Color(0xff6200ee),
                 ),
                 _screenList[_selectedIndex],
               ],
@@ -56,9 +64,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color(0xfff9aa33),
+        selectedItemColor: const Color(0xfff9aa33),
         onTap: _onItemTapped,
       ),
     );
   }
 }
+
+

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:crypto_vault/util/gobal_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -88,6 +91,7 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getPrices();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Welcome to CryptoVault'),
@@ -117,11 +121,34 @@ class IntroScreen extends StatelessWidget {
   }
 
   void onDone(context) async {
+    setBalances();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('ON_BOARDING', false);
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()));
+  }
+
+  void getPrices() async{
+    try{
+      var response = await http.get(Uri.parse(reqUrl));
+      var rb = response.body;
+        priceCryptos = json.decode(rb) as List;
+      print('Crypto prices refreshed!');
+    } catch(e){
+      print(e);
+    }
+  }
+
+  setBalances(){
+    List<dynamic> tempBalances = [];
+    List<dynamic> tempNames = [];
+    for (var i = 0; i < priceCryptos.length; i++) {
+      tempBalances.add(0.0);
+      tempNames.add(priceCryptos[i]['name']);
+    }
+      wallet['balances'] = tempBalances;
+      wallet['names'] = tempNames;
   }
 
 }

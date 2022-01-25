@@ -1,3 +1,4 @@
+import 'package:crypto_vault/screens/swap_confirmation.dart';
 import 'package:crypto_vault/util/custom_dialog.dart';
 import 'package:crypto_vault/util/gobal_variables.dart';
 import 'package:crypto_vault/util/responsive.dart';
@@ -100,7 +101,7 @@ class _SwapScreenState extends State<SwapScreen> {
                                    value: _selected2,
                                    onChanged: (newValue){
                                      setState(() {
-                                       _selected2 = newValue as String?;
+                                       _selected2 = newValue as String;
                                        if(_selected2 == 'USD'){
                                          coinSelected = false;
                                        }else{
@@ -160,7 +161,7 @@ class _SwapScreenState extends State<SwapScreen> {
                                  value: _selected,
                                  onChanged: (newValue){
                                    setState(() {
-                                     _selected = newValue as String?;
+                                     _selected = newValue as String;
                                    });
                                  },
                                  items: _jsonData.map((cryptoItem) {
@@ -384,9 +385,29 @@ class _SwapScreenState extends State<SwapScreen> {
          child: Card(
            child: TextButton(
                onPressed: (){
-
+                 if(_selected2 == null){
+                   if(_selected == null){
+                     showDialog<void>(
+                         context: context,
+                         builder: (BuildContext context) {
+                           return CustomDialog(
+                             text: 'You must select the criptos to swap',
+                             onPressedYes: () {
+                               Navigator.pop(context);
+                             },
+                             onPressedNo: () {
+                             },
+                             buttonTextNo: '',
+                             buttonTextYes: 'Retry',
+                           );
+                         });
+                   }
+                 } else{
+                     Navigator.push(
+                         context, MaterialPageRoute(builder: (context) => Swap(from: _selected2.toString(), to: _selected.toString(), priceSwap: priceToSwap, cryptoSwap: cryptoToSwap,)));
+                   }
              },
-               child: Text('Next')
+               child: const Text('Next')
            ),
          ),
        )

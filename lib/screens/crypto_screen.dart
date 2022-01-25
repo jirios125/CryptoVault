@@ -19,7 +19,6 @@ class _CryptoScreenState extends State<CryptoScreen> {
   @override
   void initState() {
     super.initState();
-    setBalances();
   }
 
   @override
@@ -249,18 +248,5 @@ class _CryptoScreenState extends State<CryptoScreen> {
     } catch(e){
       print(e);
     }
-  }
-
-  setBalances(){
-    List<dynamic> tempBalances = [];
-    List<dynamic> tempNames = [];
-    for (var i = 0; i < priceCryptos.length; i++) {
-      tempBalances.add(0.0);
-      tempNames.add(priceCryptos[i]['name']);
-    }
-    setState(() {
-      wallet['balances'] = tempBalances;
-      wallet['names'] = tempNames;
-    });
   }
 }

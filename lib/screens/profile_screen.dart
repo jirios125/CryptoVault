@@ -79,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return SingleChildScrollView(
                 child:
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment:CrossAxisAlignment.center,
                   children: [
                     SizedBox(width: responsive.wp(1.2)),
@@ -100,15 +100,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: responsive.wp(10),
                                 child: Image.network(priceCryptos[index]['image']),
                               ),
-                              SizedBox(width: responsive.wp(4)),
                               Text(priceCryptos[index]['name'],
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(width: responsive.wp(10)),
-                              Text(oCcy.format(wallet['balances'][index]),
+                              Text(wallet['balances'][index].toString(),
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
