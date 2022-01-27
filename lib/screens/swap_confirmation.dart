@@ -121,16 +121,22 @@ class _Swap extends State<Swap> {
                   )),
               SizedBox(width: responsive.wp(4)),
               isUsdToCrypto
-                  ?Text('\$${widget.priceSwap.toString()}',
-                  style:const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold
-                  ))
-                  :Text(widget.cryptoSwap.toString(),
-                  style:const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold
-                  ))
+                  ? Flexible(
+                child: Text('\$${widget.priceSwap.toString()}',
+                    style:const TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
+                    )),
+              )
+                  : Flexible(
+                child: Text(widget.cryptoSwap.toString(),
+                    style:const TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
+                    )),
+                  )
             ],
           ),
         ),
@@ -221,6 +227,9 @@ class _Swap extends State<Swap> {
     if(widget.from == 'USD'){
       fromImg = 'https://image.flaticon.com/icons/png/512/25/25228.png';
     }
+    if(widget.to == 'USD'){
+      toImg = 'https://image.flaticon.com/icons/png/512/25/25228.png';
+    }
     for (var i = 0; i < priceCryptos.length; i++) {
       if(widget.to == priceCryptos[i]['name']){
         toImg = priceCryptos[i]['image'];
@@ -255,19 +264,47 @@ class _Swap extends State<Swap> {
           });
         }
       }
+      if(widget.to == 'USD'){
+        if(mounted) {
+          setState(() {
+            priceTo = 1;
+          });
+        }
+      }
     }
   }
-
   Widget calcToPrice (){
-    if(mounted) {
-      setState(() {
-        receive = priceFrom / priceTo;
-      });
+    if(widget.from == 'USD'){
+      if(mounted) {
+        setState(() {
+          receive = priceFrom / priceTo;
+        });
+      }
+    }else{
+      for (var i = 0; i < wallet['names'].length; i++) {
+        if(widget.from == wallet['names'][i]){
+          for (var j = 0; j < priceCryptos.length; j++) {
+              if(wallet['names'][i] == priceCryptos[j]['name']){
+                double cryptoUsdBalance = 0.0;
+                cryptoUsdBalance = wallet['balances'][i] * priceCryptos[j]['current_price'];
+                if(mounted){
+                  setState(() {
+                    receive = (cryptoUsdBalance / priceTo);
+                  });
+                }
+              }
+          }
+        }
+      }
     }
-    return Text(receive.toStringAsFixed(8),
-      style: const TextStyle(
-        fontWeight: FontWeight.bold
-      ));
+
+    return Flexible(
+      child: Text(receive.toStringAsFixed(8),
+        style: const TextStyle(
+            overflow: TextOverflow.ellipsis,
+          fontWeight: FontWeight.bold
+        )),
+    );
   }
 
   confirmSwap(){
@@ -282,18 +319,24 @@ class _Swap extends State<Swap> {
         if(widget.from == wallet['names'][i]){
           if(mounted) {
             setState(() {
-              wallet['balances'][i] = wallet['balances'][i] - widget.cryptoSwap;
+              wallet['balances'][i] = wallet['balances'][i] - double.parse(widget.cryptoSwap.toString());
             });
           }
           }
         }
       }
-    for (var i = 0; i < wallet['names'].length; i++){
-      if(widget.to == wallet['names'][i]){
-        if(mounted) {
-          setState(() {
-            wallet['balances'][i] = wallet['balances'][i] + receive;
-          });
+    if(widget.to == 'USD'){
+      setState(() {
+        cashAviable = cashAviable + receive.toInt();
+      });
+    }else {
+      for (var i = 0; i < wallet['names'].length; i++) {
+        if (widget.to == wallet['names'][i]) {
+          if (mounted) {
+            setState(() {
+              wallet['balances'][i] = wallet['balances'][i] + receive;
+            });
+          }
         }
       }
     }
