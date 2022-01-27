@@ -25,21 +25,23 @@ class _CryptoScreenState extends State<CryptoScreen> {
   Widget build(BuildContext context) {
     getPrices();
     var responsive = Responsive(context);
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: responsive.ip(28),
-            ),
-            creditCard(),
-          ],
-        ),
-        cryptoPriceList(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: responsive.ip(28),
+              ),
+              creditCard(),
+            ],
+          ),
+          cryptoPriceList(),
+        ],
+      ),
     );
   }
 

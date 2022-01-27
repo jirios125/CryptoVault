@@ -106,10 +106,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(wallet['balances'][index].toString(),
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                              Flexible(
+                                child: Text(wallet['balances'][index].toString(),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               )
                             ],

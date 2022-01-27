@@ -4,6 +4,7 @@ import 'package:crypto_vault/util/gobal_variables.dart';
 import 'package:crypto_vault/util/responsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 
 
 class SwapScreen extends StatefulWidget {
@@ -65,20 +66,31 @@ class _SwapScreenState extends State<SwapScreen> {
          ],
        )),
        SizedBox(
-         child:
+         child: Row(
+           mainAxisAlignment: MainAxisAlignment.center,
+           children: [
              coinSelected
-                 ?  Text(cryptoToSwap,
-               style: const TextStyle(
-                   fontSize:65,
-                   fontWeight: FontWeight.bold
-               ),
-             )
-              :Text('\$${oCcy.format(priceToSwap).toString()}',
-              style: const TextStyle(
-                fontSize:65,
-                fontWeight: FontWeight.bold
-              ),
+                       ? Flexible(
+                         child: Text(cryptoToSwap,
+                     style: const TextStyle(
+                           fontSize:65,
+                           overflow: TextOverflow.ellipsis,
+                           fontWeight: FontWeight.bold
+                     ),
+                   ),
+                       )
+                    : Flexible(
+                      child: Text('\$${oCcy.format(priceToSwap).toString()}',
+                      style: const TextStyle(
+                        fontSize:65,
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ),
+           ],
          ),
+
        ),
        SizedBox(height: responsive.ip(12),
        child: Row(

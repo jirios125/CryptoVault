@@ -34,20 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Crypto Vault'),
+        centerTitle: true,
+        backgroundColor: const Color(0xff6200ee),
+      ),
       backgroundColor: const Color(0xffe9edf3ff),
-      body:
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                AppBar(
-                  title: const Text('Crypto Vault'),
-                  centerTitle: true,
-                  backgroundColor: const Color(0xff6200ee),
-                ),
-                _screenList[_selectedIndex],
-              ],
-            ),
-          ),
+      body: _screenList[_selectedIndex],
       bottomNavigationBar: bottomNav(),
     );
   }
