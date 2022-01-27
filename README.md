@@ -1,11 +1,11 @@
 # crypto_vault
 
-PROYECTO SIN TERMINAR!!!
-Faltantes:
-  -Mejorar UI/UX
-  -Widget Testing
-  -Bug en swap de cripto a cripto
-  -Almacenamiento de balances en localStorage
+PROYECTO SIN TERMINAR!!!<br>
+Faltantes: <br>
+  -Mejorar UI/UX<br>
+  -Widget Testing<br>
+  -Bug en swap de cripto a cripto<br>
+  -Almacenamiento de balances en localStorage<br>
 
 Este proyecto es una prueba técnica para BELO, el mismo es un sistema con el cual se puede visualizar precios de criptomonedas, cargar USD, hacer cambios entre 
 USD -> Critpomonedas
