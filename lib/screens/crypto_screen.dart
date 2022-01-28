@@ -127,12 +127,13 @@ class _CryptoScreenState extends State<CryptoScreen> {
       ),
       child: Stack(
         children: [
-          SizedBox(
-              width: responsive.wp(96),
-              height: responsive.ip(25),
-              child:
-              Image.network('https://lh3.googleusercontent.com/ZdMdznf08GDWOLY3pKfjQudbAxxQkFQ5ydRIc21BO1kHyTayTafKzz9hLw7izP3AeQ=w800-h500-rw')
-          ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(
+                  'https://lh3.googleusercontent.com/ZdMdznf08GDWOLY3pKfjQudbAxxQkFQ5ydRIc21BO1kHyTayTafKzz9hLw7izP3AeQ=w800-h500-rw',
+                  width: responsive.wp(98),
+                ),
+              ),
           Container(
             child: SizedBox(
               width: responsive.wp(96),
