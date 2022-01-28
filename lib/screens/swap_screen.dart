@@ -19,7 +19,7 @@ class _SwapScreenState extends State<SwapScreen> {
   String? _selected;
   String? _selected2;
   bool coinSelected = false;
-  bool noMoney = false;
+  bool noMoney = true;
   @override
   void initState() {
     super.initState();
@@ -32,6 +32,7 @@ class _SwapScreenState extends State<SwapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    activeUnactiveNext();
     var responsive = Responsive(context);
     return Column(
      children: [
@@ -437,23 +438,16 @@ class _SwapScreenState extends State<SwapScreen> {
   }
 
   Widget nextButton(){
-    if(cashAviable == 0){
-      for (var i = 0; i < wallet['names'].length; i++) {
-       if(wallet['balances'][i] <= 0.0){
-         setState(() {
-           noMoney = true;
-         });
-       }
-      }
-    }else{
-      setState(() {
-        noMoney = false;
-      });
-    }
     return Card(
       child: IgnorePointer(
         ignoring: noMoney,
         child: TextButton(
+          style: TextButton.styleFrom(
+            primary:
+            noMoney
+                ? Colors.grey
+                : Colors.blueAccent,
+          ),
             onPressed: (){
               if(_selected2 == null){
                 if(_selected == null){
@@ -477,10 +471,33 @@ class _SwapScreenState extends State<SwapScreen> {
                     context, MaterialPageRoute(builder: (context) => Swap(from: _selected2.toString(), to: _selected.toString(), priceSwap: priceToSwap, cryptoSwap: cryptoToSwap,)));
               }
             },
-            child: const Text('Next')
+            child: const Text('Next',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold
+            ))
         ),
       ),
     );
+  }
+
+  activeUnactiveNext(){
+    if(cashAviable == 0){
+      for (var i = 0; i < wallet['names'].length; i++) {
+        if(wallet['balances'][i] > 0.0){
+          setState(() {
+            noMoney = false;
+          });
+        }
+      }
+      setState(() {
+        noMoney = true;
+      });
+    }else{
+      setState(() {
+        noMoney = false;
+      });
+    }
   }
 
   deleteNum(){

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:crypto_vault/screens/home_screen.dart';
 import 'package:crypto_vault/util/custom_dialog.dart';
 import 'package:crypto_vault/util/gobal_variables.dart';
 import 'package:crypto_vault/util/responsive.dart';
@@ -367,7 +368,8 @@ class _Swap extends State<Swap> {
       child: Card(
         child: TextButton(onPressed: (){
           confirmSwap();
-          Navigator.pop(context);
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => HomeScreen()));
         },
             child: const Text('Confirm Swap')
         ),
