@@ -9,6 +9,9 @@ final oCcy = new NumberFormat("#,##0.00", "en_US");
 //USD Cash Avaiable
 int cashAviable = 0;
 
+int priceToSwap =0;
+String cryptoToSwap = '0.0';
+
 //Cryptos
 dynamic wallet = {
   'names': [],

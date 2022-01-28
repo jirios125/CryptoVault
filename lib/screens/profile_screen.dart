@@ -16,7 +16,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     var responsive = Responsive(context);
-
     return Column(
       children: [
         const Text('Wallet!',

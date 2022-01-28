@@ -320,6 +320,8 @@ class _Swap extends State<Swap> {
           if(mounted) {
             setState(() {
               wallet['balances'][i] = wallet['balances'][i] - double.parse(widget.cryptoSwap.toString());
+              priceToSwap = 0;
+              cryptoToSwap = '0.0';
             });
           }
           }
